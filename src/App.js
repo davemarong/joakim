@@ -1,6 +1,3 @@
-import logo from "./logo.svg";
-import "./App.css";
-
 function App() {
   const openMediaDevices = async (constraints) => {
     return await navigator.mediaDevices.getUserMedia(constraints);
