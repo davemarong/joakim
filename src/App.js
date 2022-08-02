@@ -32,6 +32,8 @@ function App() {
       inputEl.srcObject = mediaStream;
       inputEl.onloadedmetadata = () => {
         inputEl.play();
+
+        console.log("did it");
       };
     })
     .catch((err) => {
@@ -40,7 +42,13 @@ function App() {
     });
   return (
     <div>
-      <video ref={inputEl}></video>
+      {/* <video ref={inputEl}></video> */}
+      <video
+        onLoadedMetadata={() => {
+          console.log("hei");
+        }}
+        // ref={inputEl}
+      />
       Hei du
     </div>
   );
