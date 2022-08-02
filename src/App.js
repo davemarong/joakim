@@ -1,35 +1,47 @@
-import React, { useState } from "react";
-import { QrReader } from "react-qr-reader";
+import React, { useState, useEffect, useRef } from "react";
+// import { QrReader } from "react-qr-reader";
+import QRCode from "react-qr-code";
 
 function App() {
-  const [data, setData] = useState("No result");
+  // const [data, setData] = useState("No result");
 
-  const openMediaDevices = async (constraints) => {
-    return await navigator.mediaDevices.getUserMedia(constraints);
+  // useEffect(() => {
+  //   const openMediaDevices = async (constraints) => {
+  //     return await navigator.mediaDevices.getUserMedia(constraints);
+  //   };
+
+  //   try {
+  //     const stream = openMediaDevices({ video: true, audio: true });
+  //     console.log("Got MediaStream:", stream);
+  //     setData(stream);
+  //   } catch (error) {
+  //     console.error("Error accessing media devices.", error);
+  //   }
+  // }, []);
+
+  const inputEl = useRef(null);
+
+  const constraints = {
+    audio: true,
+    video: { width: 1280, height: 720 },
   };
 
-  try {
-    const stream = openMediaDevices({ video: true, audio: true });
-    console.log("Got MediaStream:", stream);
-  } catch (error) {
-    console.error("Error accessing media devices.", error);
-  }
+  navigator.mediaDevices
+    .getUserMedia(constraints)
+    .then((mediaStream) => {
+      inputEl.srcObject = mediaStream;
+      inputEl.onloadedmetadata = () => {
+        inputEl.play();
+      };
+    })
+    .catch((err) => {
+      // always check for errors at the end.
+      console.error(`${err.name}: ${err.message}`);
+    });
   return (
     <div>
+      <video ref={inputEl}></video>
       Hei du
-      <QrReader
-        onResult={(result, error) => {
-          if (!!result) {
-            setData(result?.text);
-          }
-
-          if (!!error) {
-            console.info(error);
-          }
-        }}
-        style={{ width: "100%" }}
-      />
-      <p>{data}</p>
     </div>
   );
 }
